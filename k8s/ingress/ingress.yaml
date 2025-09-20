@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jenkins
+  namespace: dev                 # same namespace where Jenkins pod runs
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx       # the controller we installed earlier
+  rules:
+  - host: jenkins-ines.ddns.net    # << change this
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jenkins       # existing Service in namespace ci
+            port:
+              number: 8080
+  tls:
+  - hosts:
+    - jenkins.mycorp.lab
+    secretName: jenkins-tls     # cert-manager will create this

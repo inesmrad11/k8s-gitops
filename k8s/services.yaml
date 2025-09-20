@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: dev
+spec:
+  selector:
+    app: backend
+  type: LoadBalancer   # or ClusterIP if you plan to use Ingress
+  ports:
+  - name: http
+    port: 9009
+    targetPort: 9009
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: dev
+spec:
+  selector:
+    app: frontend
+  type: LoadBalancer   # gives you http://<minikube-ip>:3xxxx
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80

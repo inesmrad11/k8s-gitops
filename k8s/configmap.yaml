@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: dev
+data:
+  SERVER_PORT: "9009"
+  DB_URL: jdbc:mysql://mysql-db:3306/soprahrdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+  DB_USERNAME: "root"
+  JWT_EXPIRATION: "86400000"
+  JWT_SECRET: "oK27f39k13s6PVlwRKiJaGR1PU4IXN1M0YMQqgBovbyzaUuCHliC5Jr58f3rvI0"
+  SHOW_SQL: "false"
+  DDL_AUTO: "update"
+  CORS_ALLOWED_ORIGINS: http://192.168.49.243,http://localhost:4200,http://localhost:3000,http://192.168.49.2:30609
+  RECAPTCHA_SECRET: "6Lc7-nMrAAAAAGvJa43LF0yoCk0n7Q7usCQ4hyIS"
