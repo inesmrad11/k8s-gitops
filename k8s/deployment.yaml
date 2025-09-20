@@ -24,7 +24,7 @@ spec:
         command: ['sh', '-c', 'until nc -z mysql-db 3306; do echo "Waiting for MySQL..."; sleep 2; done; echo "MySQL is ready";']
       containers:
       - name: backend
-        image: inesmrad/soprahr-cicd-backend:${IMAGE_TAG}
+        image: inesmrad/soprahr-cicd-backend
         imagePullPolicy: Always
         ports:
         - containerPort: 9009
@@ -179,7 +179,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: inesmrad/soprahr-cicd-frontend:${IMAGE_TAG}
+        image: inesmrad/soprahr-cicd-frontend
         imagePullPolicy: Always
         ports:
         - containerPort: 80

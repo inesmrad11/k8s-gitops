@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deployment.yaml
+  - services.yaml
+  - mysql.yaml
+images:
+  - name: inesmrad/soprahr-cicd-backend
+    newTag: TAG_BACKEND
+  - name: inesmrad/soprahr-cicd-frontend
+    newTag: TAG_FRONTEND
