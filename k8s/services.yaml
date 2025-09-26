@@ -4,7 +4,8 @@ metadata:
   name: backend
   namespace: dev
   labels:
-    release: prom          # <-- add this line
+    app: backend  # This must match ServiceMonitor selector
+    release: prom
 spec:
   selector:
     app: backend

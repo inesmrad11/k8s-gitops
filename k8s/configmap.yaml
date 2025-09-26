@@ -11,9 +11,12 @@ data:
   JWT_SECRET: "oK27f39k13s6PVlwRKiJaGR1PU4IXN1M0YMQqgBovbyzaUuCHliC5Jr58f3rvI0"
   SHOW_SQL: "false"
   DDL_AUTO: "update"
-  # CORS handled by Ingress - no need for backend CORS config
   RECAPTCHA_SECRET: "6Lc7-nMrAAAAAGvJa43LF0yoCk0n7Q7usCQ4hyIS"
-  # Prometheus Monitoring
+  
+  # Prometheus Monitoring - Remove security
   MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info,metrics,prometheus"
   MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED: "true"
   MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED: "true"
+  MANAGEMENT_ENDPOINT_HEALTH_SHOW-DETAILS: "always"
+  # Remove security from health endpoints
+  MANAGEMENT_ENDPOINT_HEALTH_ROLES: ""
