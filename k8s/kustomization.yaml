@@ -5,6 +5,7 @@ resources:
 - services.yaml
 - mysql.yaml
 - configmap.yaml
+- frontend-ingress.yaml
 images:
 - name: inesmrad/soprahr-cicd-backend
   newTag: 1.0.0
