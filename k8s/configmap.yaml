@@ -5,7 +5,7 @@ metadata:
   namespace: dev
 data:
   SERVER_PORT: "9009"
-  DB_URL: jdbc:mysql://mysql-db:3306/soprahrdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+  DB_URL: "jdbc:mysql://mysql-db:3306/soprahrdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
   DB_USERNAME: "root"
   JWT_EXPIRATION: "86400000"
   JWT_SECRET: "oK27f39k13s6PVlwRKiJaGR1PU4IXN1M0YMQqgBovbyzaUuCHliC5Jr58f3rvI0"
@@ -13,10 +13,16 @@ data:
   DDL_AUTO: "update"
   RECAPTCHA_SECRET: "6Lc7-nMrAAAAAGvJa43LF0yoCk0n7Q7usCQ4hyIS"
   
-  # Prometheus Monitoring - Remove security
+  # Prometheus Monitoring - Complete configuration
   MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info,metrics,prometheus"
   MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED: "true"
-  MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED: "true"
   MANAGEMENT_ENDPOINT_HEALTH_SHOW-DETAILS: "always"
-  # Remove security from health endpoints
-  MANAGEMENT_ENDPOINT_HEALTH_ROLES: ""
+  MANAGEMENT_ENDPOINT_METRICS_ENABLED: "true"
+  MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED: "true"
+  MANAGEMENT_ENDPOINT_HEALTH_ENABLED: "true"
+  
+  # Additional settings to fix 500 errors
+  MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: "true"
+  MANAGEMENT_INFO_ENV_ENABLED: "true"
+  MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED-ORIGINS: "*"
+  MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED-METHODS: "GET,POST"
