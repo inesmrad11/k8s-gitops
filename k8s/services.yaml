@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     app: backend
-  type: LoadBalancer   # or ClusterIP if you plan to use Ingress
+  type: ClusterIP
   ports:
   - name: http
     port: 9009
@@ -20,7 +20,7 @@ metadata:
 spec:
   selector:
     app: frontend
-  type: LoadBalancer   # gives you http://<minikube-ip>:3xxxx
+  type: ClusterIP
   ports:
   - name: http
     port: 80
