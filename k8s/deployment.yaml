@@ -30,15 +30,15 @@ spec:
         - containerPort: 9009
         resources:
           limits:
-            memory: "768Mi"
-            cpu: "500m"
+            memory: "1024Mi"
+            cpu: "1000m"
           requests:
-            memory: "256Mi"
-            cpu: "100m"
+            memory: "512Mi"
+            cpu: "200m"
         env:
         # Database Configuration
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://mysql-db:3306/soprahrdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&autoReconnect=true"
+          value: "jdbc:mysql://mysql-db:3306/soprahrdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&autoReconnect=true&connectTimeout=60000&socketTimeout=30000"
         - name: SPRING_DATASOURCE_USERNAME
           value: "root"
         - name: SPRING_DATASOURCE_PASSWORD
@@ -48,15 +48,18 @@ spec:
               key: DB_PASSWORD
         - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
           value: "com.mysql.cj.jdbc.Driver"
-        # Debug logging
-        - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_JDBC_CORE
-          value: "DEBUG"
-        - name: LOGGING_LEVEL_COM_ZAXXER_HIKARI
-          value: "DEBUG"
-        - name: LOGGING_LEVEL_ORG_HIBERNATE
-          value: "DEBUG"
-        - name: SPRING_JPA_SHOW_SQL
+        
+        # Prometheus Configuration
+        - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+          value: "health,info,metrics,prometheus"
+        - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
           value: "true"
+        - name: MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED
+          value: "true"
+        - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+          value: "always"
+        
+        # Performance Optimization
         - name: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
           value: "60000"
         - name: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
@@ -72,7 +75,7 @@ spec:
         - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
           value: "org.hibernate.dialect.MySQLDialect"
           
-        # Disable OTP and Mail Services
+        # Disable unnecessary services
         - name: APP_FEATURE_OTP_ENABLED
           value: "false"
         - name: SPRING_MAIL_ENABLED
@@ -80,48 +83,13 @@ spec:
         - name: MANAGEMENT_HEALTH_MAIL_ENABLED
           value: "false"
           
-        # Performance Optimization
-        - name: SPRING_MAIN_LAZY_INITIALIZATION
-          value: "true"
-        - name: SPRING_MAIN_WEB_APPLICATION_TYPE
-          value: "servlet"
-        - name: SPRING_AUTOCONFIGURE_EXCLUDE
-          value: "org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration,org.springframework.boot.actuate.autoconfigure.mail.MailHealthContributorAutoConfiguration"
-        - name: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
-          value: "50"
-        - name: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
-          value: "50"
-        - name: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
-          value: "true"
-        - name: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
-          value: "true"
-          
-        command: ["java",
-          "-XX:+UseContainerSupport",
-          "-XX:MaxRAMPercentage=75.0",
-          "-Xms384m",
-          "-Xmx512m",
-          "-XX:+UseG1GC",
-          "-XX:MaxGCPauseMillis=300",
-          "-XX:+UseStringDeduplication",
-          "-XX:InitiatingHeapOccupancyPercent=35",
-          "-XX:ParallelGCThreads=2",
-          "-XX:ConcGCThreads=2",
-          "-XX:+HeapDumpOnOutOfMemoryError",
-          "-XX:HeapDumpPath=/tmp/heapdump.hprof",
-          "-XX:+ExitOnOutOfMemoryError",
-          "-Xlog:gc*:file=/tmp/gc.log:time,uptime:filecount=2,filesize=10m",
-          "-Djava.security.egd=file:/dev/./urandom",
-          "-Dspring.main.lazy-initialization=true",
-          "-Dspring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration,org.springframework.boot.actuate.autoconfigure.mail.MailHealthContributorAutoConfiguration",
-          "-Dspring.mail.enabled=false",
-          "-Dmanagement.health.mail.enabled=false",
-          "-Dspring.jpa.properties.hibernate.jdbc.time_zone=UTC",
-          "-Dspring.jpa.properties.hibernate.generate_statistics=false",
-          "-Dlogging.level.org.hibernate.SQL=WARN",
-          "-Dlogging.level.org.hibernate.type.descriptor.sql.BasicBinder=WARN",
-          "-jar",
-          "app.jar"]
+        command: 
+        - "java"
+        - "-Xmx768m"
+        - "-Xms512m"
+        - "-Djava.security.egd=file:/dev/./urandom"
+        - "-jar"
+        - "app.jar"
         envFrom:
         - configMapRef:
             name: app-config
@@ -129,32 +97,32 @@ spec:
             name: app-secrets
         startupProbe:
           httpGet:
-            path: /actuator/health/liveness
+            path: /actuator/health
             port: 9009
             scheme: HTTP
-          failureThreshold: 60  # 10 minutes (60 * 10s)
+          failureThreshold: 30
           periodSeconds: 10
           timeoutSeconds: 5
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
         readinessProbe:
           httpGet:
-            path: /actuator/health/readiness
+            path: /actuator/health
             port: 9009
             scheme: HTTP
-          initialDelaySeconds: 120  # 2 minutes
-          periodSeconds: 15
-          timeoutSeconds: 5
-          failureThreshold: 10
+          initialDelaySeconds: 120
+          periodSeconds: 20
+          timeoutSeconds: 10
+          failureThreshold: 6
           successThreshold: 1
         livenessProbe:
           httpGet:
-            path: /actuator/health/liveness
+            path: /actuator/health
             port: 9009
             scheme: HTTP
-          initialDelaySeconds: 300  # 5 minutes
-          periodSeconds: 30
-          timeoutSeconds: 10
-          failureThreshold: 5
+          initialDelaySeconds: 300
+          periodSeconds: 45
+          timeoutSeconds: 15
+          failureThreshold: 3
           successThreshold: 1
 ---
 apiVersion: apps/v1
