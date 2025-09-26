@@ -6,7 +6,7 @@ resources:
 - mysql.yaml
 - configmap.yaml
 - frontend-ingress.yaml
-- ../monitoring/servicemonitor.yaml
+- servicemonitor.yaml
 images:
 - name: inesmrad/soprahr-cicd-backend
   newTag: 1.0.0
