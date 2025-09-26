@@ -13,6 +13,9 @@ data:
   DDL_AUTO: "update"
   RECAPTCHA_SECRET: "6Lc7-nMrAAAAAGvJa43LF0yoCk0n7Q7usCQ4hyIS"
   
+  # ADD THE MISSING VARIABLE - This is what's causing the startup failure
+  CORS_ALLOWED_ORIGINS: "*"
+  
   # Prometheus Monitoring - Complete configuration
   MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info,metrics,prometheus"
   MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED: "true"
