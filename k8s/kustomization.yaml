@@ -8,6 +8,7 @@ resources:
 - frontend-ingress.yaml
 - servicemonitor.yaml
 - networkpolicy.yaml  # Add this if you create the NetworkPolicy
+- app-secrets.yaml
 images:
 - name: inesmrad/soprahr-cicd-backend
   newTag: 1.0.0
